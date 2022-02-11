@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "Spacebook-App",
+    "slug": "Spacebook-App",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}

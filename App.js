@@ -8,6 +8,7 @@ import Login from "./src/components/Login.js";
 import Signup from "./src/components/Signup.js";
 import Home from "./src/components/Home.js"
 import Profile from "./src/components/Profile.js"
+import EditProfile from "./src/components/EditProfile.js"
 import Logout from "./src/components/Logout.js"
 
 const Stack = createNativeStackNavigator();
@@ -19,6 +20,7 @@ const App = () => {
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="EditProfile" component={EditProfile} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Logout" component={Logout} />
       </Stack.Navigator>

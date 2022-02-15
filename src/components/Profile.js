@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, Button } from 'react-native';
+import { View, Text, FlatList, Button, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { baseUrl } from '../../App';
 
 
-class HomeScreen extends Component {
+class ProfileScreen extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             isLoading: true,
-            listData: []
+            userData: null,
         }
     }
 
@@ -28,7 +28,9 @@ class HomeScreen extends Component {
 
     getData = async () => {
         const value = await AsyncStorage.getItem('@session_token');
-        return fetch(baseUrl + "search", {
+        const userid = await AsyncStorage.getItem('@userid')
+
+        return fetch(baseUrl + "user/" + userid, {
             'headers': {
                 'X-Authorization': value
             }
@@ -45,7 +47,7 @@ class HomeScreen extends Component {
             .then((responseJson) => {
                 this.setState({
                     isLoading: false,
-                    listData: responseJson
+                    userData: responseJson
                 })
             })
             .catch((error) => {
@@ -64,6 +66,7 @@ class HomeScreen extends Component {
 
         if (this.state.isLoading) {
             return (
+
                 <View
                     style={{
                         flex: 1,
@@ -75,27 +78,32 @@ class HomeScreen extends Component {
                 </View>
             );
         } else {
+            console.log(this.state.userData)
             return (
                 <View>
-                    <FlatList
-                        data={this.state.listData}
-                        renderItem={({ item }) => (
-                            <View>
-                                <Text>{item.user_givenname} {item.user_familyname}</Text>
-                            </View>
-                        )}
-                        keyExtractor={(item, index) => item.user_id.toString()}
-                    />
-                    <Button
-                        title="Profile"
-                        color="green"
-                        onPress={() => this.props.navigation.navigate("Profile")}
-                    />
-                    <Button
-                        title="Logout"
-                        color="darkblue"
-                        onPress={() => this.props.navigation.navigate("Logout")}
-                    />
+                    <View
+                        style={{
+                            flex: 1,
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}>
+                        <Text>My Profile</Text>
+                        <br></br>
+                        <Text>Name: {this.state.userData.first_name} {this.state.userData.last_name}</Text>
+                        <Text>Email: {this.state.userData.email}</Text>
+                        <Text>Friend Count: {this.state.userData.friend_count}</Text>
+                        <Button
+                            title="Home"
+                            color="darkblue"
+                            onPress={() => this.props.navigation.navigate("Home")}
+                        />
+                        <Button
+                            title="Logout"
+                            color="darkblue"
+                            onPress={() => this.props.navigation.navigate("Logout")}
+                        />
+                    </View>
                 </View>
             );
         }
@@ -105,4 +113,4 @@ class HomeScreen extends Component {
 
 
 
-export default HomeScreen;
+export default ProfileScreen;

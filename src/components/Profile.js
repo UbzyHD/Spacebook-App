@@ -11,6 +11,7 @@ class ProfileScreen extends Component {
         this.state = {
             isLoading: true,
             userData: null,
+            userPhoto: null,
         }
     }
 
@@ -20,6 +21,7 @@ class ProfileScreen extends Component {
         });
 
         this.getData();
+        this.getPhoto();
     }
 
     componentWillUnmount() {
@@ -53,6 +55,30 @@ class ProfileScreen extends Component {
             .catch((error) => {
                 console.log(error);
             })
+    }
+
+    getPhoto = async () => {
+        const value = await AsyncStorage.getItem('@session_token');
+        const userid = await AsyncStorage.getItem('@userid')
+
+        fetch(baseUrl + "user/" + userid + "/photo", {
+            method: 'GET',
+            headers: {
+                'X-Authorization': value
+            }
+        })
+            .then((res) => {
+                return res.blob();
+            })
+            .then((resBlob) => {
+                let data = URL.createObjectURL(resBlob);
+                this.setState({
+                    userPhoto: data,
+                });
+            })
+            .catch((err) => {
+                console.log("error", err)
+            });
     }
 
     checkLoggedIn = async () => {
@@ -90,6 +116,18 @@ class ProfileScreen extends Component {
                         }}>
                         <Text>My Profile</Text>
                         <br></br>
+                        <View>
+                            <Image
+                                source={{
+                                    uri: this.state.userPhoto,
+                                }}
+                                style={{
+                                    width: 100,
+                                    height: 100,
+                                    borderWidth: 2
+                                }}
+                            />
+                        </View>
                         <Text>Name: {this.state.userData.first_name} {this.state.userData.last_name}</Text>
                         <Text>Email: {this.state.userData.email}</Text>
                         <Text>Friend Count: {this.state.userData.friend_count}</Text>

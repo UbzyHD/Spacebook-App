@@ -8,6 +8,10 @@
   <br>
 </h1>
 
+<p align="center">
+  <a href="https://standardjs.com"><img src="https://img.shields.io/badge/code_style-standard-brightgreen.svg" alt="Standard - JavaScript Style Guide"></a>
+</p>
+
 ## React Native app demonstrating REST API implementation
 
 This repository hosts a mobile app created with React Native to interact with a REST API in accordance with a university coursework specification.
@@ -57,6 +61,16 @@ npm run web
 
 
 ## Code Style
+
+[![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard)
+
+This project utilises and conforms to the [Standard JavaScript Code Style]() through the use of a linter (ESLint).
+
+Depending on your development environment, you may need/can install plugins/extensions that will aid workflow if you don't already have them installed. As VS Code has been used during the development of this project the following extensions are required:
+
+```
+dbaeumer.vscode-eslint
+```
 
 
 ## License

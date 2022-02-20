@@ -1,23 +1,22 @@
-import React, { Component } from 'react';
-import { Button, Text } from 'react-native';
-import { ScrollView, TextInput } from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { baseUrl } from '../../App';
-
+import React, { Component } from 'react'
+import { Button, Text } from 'react-native'
+import { ScrollView, TextInput } from 'react-native-gesture-handler'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import PropTypes from 'prop-types'
+import { baseUrl } from '../../App'
 
 class Login extends Component {
-    constructor(props) {
-        super(props);
+    constructor (props) {
+        super(props)
 
         this.state = {
-            email: "",
-            password: ""
+            email: '',
+            password: ''
         }
-
     }
 
     login = async () => {
-        return fetch(baseUrl + "login", {
+        return fetch(baseUrl + 'login', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -28,27 +27,27 @@ class Login extends Component {
                 if (response.status === 200) {
                     return response.json()
                 } else if (response.status === 400) {
-                    throw 'Invalid email or password';
+                    throw Error('Invalid email or password')
                 } else {
-                    throw 'Something went wrong';
+                    throw Error('Something went wrong')
                 }
             })
             .then(async (responseJson) => {
-                console.log(responseJson);
-                await AsyncStorage.setItem('@session_token', responseJson.token);
-				await AsyncStorage.setItem('@user_id', responseJson.id);
-                this.props.navigation.navigate("Home");
+                console.log(responseJson)
+                await AsyncStorage.setItem('@session_token', responseJson.token)
+                await AsyncStorage.setItem('@user_id', responseJson.id)
+                this.props.navigation.navigate('Home')
             })
             .catch((error) => {
-                console.log(error);
+                console.log(error)
             })
     }
 
-    render() {
+    render () {
         return (
 
             <ScrollView>
-                <Text style={{ textAlignVertical: "center", textAlign: "center", }}>Welcome to Spacebook!</Text>
+                <Text style={{ textAlignVertical: 'center', textAlign: 'center' }}>Welcome to Spacebook!</Text>
                 <TextInput
                     placeholder="Enter your email..."
                     onChangeText={(email) => this.setState({ email })}
@@ -69,11 +68,12 @@ class Login extends Component {
                 <Button
                     title="Don't have an account?"
                     color="darkblue"
-                    onPress={() => this.props.navigation.navigate("Signup")}
+                    onPress={() => this.props.navigation.navigate('Signup')}
                 />
             </ScrollView>
         )
     }
 }
+Login.propTypes = { navigation: PropTypes.object.isRequired }
 
-export default Login;
+export default Login

@@ -1,21 +1,22 @@
-import React, { Component } from 'react';
-import { Button, ScrollView, TextInput } from 'react-native';
-import { baseUrl } from '../../App';
+import React, { Component } from 'react'
+import { Button, ScrollView, TextInput } from 'react-native'
+import PropTypes from 'prop-types'
+import { baseUrl } from '../../App'
 
 class SignupScreen extends Component {
-    constructor(props) {
-        super(props);
+    constructor (props) {
+        super(props)
 
         this.state = {
-            first_name: "",
-            last_name: "",
-            email: "",
-            password: ""
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: ''
         }
     }
 
     signup = () => {
-        return fetch(baseUrl + "user", {
+        return fetch(baseUrl + 'user', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -26,32 +27,32 @@ class SignupScreen extends Component {
                 if (response.status === 201) {
                     return response.json()
                 } else if (response.status === 400) {
-                    throw 'Failed validation';
+                    throw Error('Failed validation')
                 } else {
-                    throw 'Something went wrong';
+                    throw Error('Something went wrong')
                 }
             })
             .then((responseJson) => {
-                console.log("User created with ID: ", responseJson);
-                this.props.navigation.navigate("Login");
+                console.log('User created with ID: ', responseJson)
+                this.props.navigation.navigate('Login')
             })
             .catch((error) => {
-                console.log(error);
+                console.log(error)
             })
     }
 
-    render() {
+    render () {
         return (
             <ScrollView>
                 <TextInput
                     placeholder="Enter your first name..."
-                    onChangeText={(first_name) => this.setState({ first_name })}
+                    onChangeText={(firstName) => this.setState({ firstName })}
                     value={this.state.first_name}
                     style={{ padding: 5, borderWidth: 1, margin: 5 }}
                 />
                 <TextInput
                     placeholder="Enter your last name..."
-                    onChangeText={(last_name) => this.setState({ last_name })}
+                    onChangeText={(lastName) => this.setState({ lastName })}
                     value={this.state.last_name}
                     style={{ padding: 5, borderWidth: 1, margin: 5 }}
                 />
@@ -76,5 +77,6 @@ class SignupScreen extends Component {
         )
     }
 }
+SignupScreen.propTypes = { navigation: PropTypes.object.isRequired }
 
-export default SignupScreen;
+export default SignupScreen

@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { View, Text, FlatList, Button } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { baseUrl } from '../../App';
-
+import React, { Component } from 'react'
+import { View, Text, FlatList, Button } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import PropTypes from 'prop-types'
+import { baseUrl } from '../../App'
 
 class HomeScreen extends Component {
-    constructor(props) {
-        super(props);
+    constructor (props) {
+        super(props)
 
         this.state = {
             isLoading: true,
@@ -14,22 +14,22 @@ class HomeScreen extends Component {
         }
     }
 
-    componentDidMount() {
+    componentDidMount () {
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
-            this.checkLoggedIn();
-        });
+            this.checkLoggedIn()
+        })
 
-        this.getData();
+        this.getData()
     }
 
-    componentWillUnmount() {
-        this.unsubscribe();
+    componentWillUnmount () {
+        this.unsubscribe()
     }
 
     getData = async () => {
-        const value = await AsyncStorage.getItem('@session_token');
-        return fetch(baseUrl + "search", {
-            'headers': {
+        const value = await AsyncStorage.getItem('@session_token')
+        return fetch(baseUrl + 'search', {
+            headers: {
                 'X-Authorization': value
             }
         })
@@ -37,9 +37,9 @@ class HomeScreen extends Component {
                 if (response.status === 200) {
                     return response.json()
                 } else if (response.status === 401) {
-                    this.props.navigation.navigate("Login");
+                    this.props.navigation.navigate('Login')
                 } else {
-                    throw 'Something went wrong';
+                    throw Error('Something went wrong')
                 }
             })
             .then((responseJson) => {
@@ -49,19 +49,18 @@ class HomeScreen extends Component {
                 })
             })
             .catch((error) => {
-                console.log(error);
+                console.log(error)
             })
     }
 
     checkLoggedIn = async () => {
-        const value = await AsyncStorage.getItem('@session_token');
+        const value = await AsyncStorage.getItem('@session_token')
         if (value == null) {
-            this.props.navigation.navigate('Login');
+            this.props.navigation.navigate('Login')
         }
     };
 
-    render() {
-
+    render () {
         if (this.state.isLoading) {
             return (
                 <View
@@ -69,11 +68,11 @@ class HomeScreen extends Component {
                         flex: 1,
                         flexDirection: 'column',
                         justifyContent: 'center',
-                        alignItems: 'center',
+                        alignItems: 'center'
                     }}>
                     <Text>Loading..</Text>
                 </View>
-            );
+            )
         } else {
             return (
                 <View>
@@ -89,20 +88,19 @@ class HomeScreen extends Component {
                     <Button
                         title="Profile"
                         color="green"
-                        onPress={() => this.props.navigation.navigate("Profile")}
+                        onPress={() => this.props.navigation.navigate('Profile')}
                     />
                     <Button
                         title="Logout"
                         color="darkblue"
-                        onPress={() => this.props.navigation.navigate("Logout")}
+                        onPress={() => this.props.navigation.navigate('Logout')}
                     />
                 </View>
-            );
+            )
         }
-
     }
 }
 
+HomeScreen.propTypes = { navigation: PropTypes.object.isRequired }
 
-
-export default HomeScreen;
+export default HomeScreen

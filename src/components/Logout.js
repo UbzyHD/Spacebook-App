@@ -1,61 +1,62 @@
-import React, { Component } from 'react';
-import { Text, ScrollView, Button } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { baseUrl } from '../../App';
+import React, { Component } from 'react'
+import { ScrollView, Button, ToastAndroid } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import PropTypes from 'prop-types'
+import { baseUrl } from '../../App'
 
 class LogoutScreen extends Component {
-    constructor(props) {
-        super(props);
+    constructor (props) {
+        super(props)
 
         this.state = {
             token: ''
         }
     }
 
-    componentDidMount() {
+    componentDidMount () {
         this._unsubscribe = this.props.navigation.addListener('focus', () => {
-            this.checkLoggedIn();
-        });
+            this.checkLoggedIn()
+        })
     }
 
-    componentWillUnmount() {
-        this._unsubscribe();
+    componentWillUnmount () {
+        this._unsubscribe()
     }
 
     checkLoggedIn = async () => {
-        const value = await AsyncStorage.getItem('@session_token');
+        const value = await AsyncStorage.getItem('@session_token')
         if (value !== null) {
-            this.setState({ token: value });
+            this.setState({ token: value })
         } else {
-            this.props.navigation.navigate("Login");
+            this.props.navigation.navigate('Login')
         }
     }
 
     logout = async () => {
-        let token = await AsyncStorage.getItem('@session_token');
-        await AsyncStorage.removeItem('@session_token');
-        return fetch(baseUrl + "logout", {
+        const token = await AsyncStorage.getItem('@session_token')
+        await AsyncStorage.removeItem('@session_token')
+        return fetch(baseUrl + 'logout', {
             method: 'post',
             headers: {
-                "X-Authorization": token
+                'X-Authorization': token
             }
         })
             .then((response) => {
                 if (response.status === 200) {
-                    this.props.navigation.navigate("Login");
+                    this.props.navigation.navigate('Login')
                 } else if (response.status === 401) {
-                    this.props.navigation.navigate("Login");
+                    this.props.navigation.navigate('Login')
                 } else {
-                    throw 'Something went wrong';
+                    throw Error('Something went wrong')
                 }
             })
             .catch((error) => {
-                console.log(error);
-                ToastAndroid.show(error, ToastAndroid.SHORT);
+                console.log(error)
+                ToastAndroid.show(error, ToastAndroid.SHORT)
             })
     }
 
-    render() {
+    render () {
         return (
             <ScrollView>
                 <Button
@@ -65,11 +66,12 @@ class LogoutScreen extends Component {
                 <Button
                     title="Back Home"
                     color="darkblue"
-                    onPress={() => this.props.navigation.navigate("Home")}
+                    onPress={() => this.props.navigation.navigate('Home')}
                 />
             </ScrollView>
         )
     }
 }
+LogoutScreen.propTypes = { navigation: PropTypes.object.isRequired }
 
-export default LogoutScreen;
+export default LogoutScreen

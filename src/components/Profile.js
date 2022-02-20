@@ -1,39 +1,39 @@
-import React, { Component } from 'react';
-import { View, Text, FlatList, Button, Image } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { baseUrl } from '../../App';
-
+import React, { Component } from 'react'
+import { View, Text, Button, Image } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import PropTypes from 'prop-types'
+import { baseUrl } from '../../App'
 
 class ProfileScreen extends Component {
-    constructor(props) {
-        super(props);
+    constructor (props) {
+        super(props)
 
         this.state = {
             isLoading: true,
             userData: null,
-            userPhoto: null,
+            userPhoto: null
         }
     }
 
-    componentDidMount() {
+    componentDidMount () {
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
-            this.checkLoggedIn();
-        });
+            this.checkLoggedIn()
+        })
 
-        this.getData();
-        this.getPhoto();
+        this.getData()
+        this.getPhoto()
     }
 
-    componentWillUnmount() {
-        this.unsubscribe();
+    componentWillUnmount () {
+        this.unsubscribe()
     }
 
     getData = async () => {
-        const value = await AsyncStorage.getItem('@session_token');
+        const value = await AsyncStorage.getItem('@session_token')
         const userid = await AsyncStorage.getItem('@userid')
 
-        return fetch(baseUrl + "user/" + userid, {
-            'headers': {
+        return fetch(baseUrl + 'user/' + userid, {
+            headers: {
                 'X-Authorization': value
             }
         })
@@ -41,9 +41,9 @@ class ProfileScreen extends Component {
                 if (response.status === 200) {
                     return response.json()
                 } else if (response.status === 401) {
-                    this.props.navigation.navigate("Login");
+                    this.props.navigation.navigate('Login')
                 } else {
-                    throw 'Something went wrong';
+                    throw Error('Something went wrong')
                 }
             })
             .then((responseJson) => {
@@ -53,43 +53,42 @@ class ProfileScreen extends Component {
                 })
             })
             .catch((error) => {
-                console.log(error);
+                console.log(error)
             })
     }
 
     getPhoto = async () => {
-        const value = await AsyncStorage.getItem('@session_token');
+        const value = await AsyncStorage.getItem('@session_token')
         const userid = await AsyncStorage.getItem('@userid')
 
-        fetch(baseUrl + "user/" + userid + "/photo", {
+        fetch(baseUrl + 'user/' + userid + '/photo', {
             method: 'GET',
             headers: {
                 'X-Authorization': value
             }
         })
             .then((res) => {
-                return res.blob();
+                return res.blob()
             })
             .then((resBlob) => {
-                let data = URL.createObjectURL(resBlob);
+                const data = URL.createObjectURL(resBlob)
                 this.setState({
-                    userPhoto: data,
-                });
+                    userPhoto: data
+                })
             })
             .catch((err) => {
-                console.log("error", err)
-            });
+                console.log('error', err)
+            })
     }
 
     checkLoggedIn = async () => {
-        const value = await AsyncStorage.getItem('@session_token');
+        const value = await AsyncStorage.getItem('@session_token')
         if (value == null) {
-            this.props.navigation.navigate('Login');
+            this.props.navigation.navigate('Login')
         }
     };
 
-    render() {
-
+    render () {
         if (this.state.isLoading) {
             return (
 
@@ -98,11 +97,11 @@ class ProfileScreen extends Component {
                         flex: 1,
                         flexDirection: 'column',
                         justifyContent: 'center',
-                        alignItems: 'center',
+                        alignItems: 'center'
                     }}>
                     <Text>Loading..</Text>
                 </View>
-            );
+            )
         } else {
             console.log(this.state.userData)
             return (
@@ -112,14 +111,14 @@ class ProfileScreen extends Component {
                             flex: 1,
                             flexDirection: 'column',
                             justifyContent: 'center',
-                            alignItems: 'center',
+                            alignItems: 'center'
                         }}>
                         <Text>My Profile</Text>
                         <br></br>
                         <View>
                             <Image
                                 source={{
-                                    uri: this.state.userPhoto,
+                                    uri: this.state.userPhoto
                                 }}
                                 style={{
                                     width: 100,
@@ -134,26 +133,24 @@ class ProfileScreen extends Component {
                         <Button
                             title="Home"
                             color="darkblue"
-                            onPress={() => this.props.navigation.navigate("Home")}
+                            onPress={() => this.props.navigation.navigate('Home')}
                         />
                         <Button
                             title="Edit Profile"
                             color="pink"
-                            onPress={() => this.props.navigation.navigate("EditProfile")}
+                            onPress={() => this.props.navigation.navigate('EditProfile')}
                         />
                         <Button
                             title="Logout"
                             color="darkblue"
-                            onPress={() => this.props.navigation.navigate("Logout")}
+                            onPress={() => this.props.navigation.navigate('Logout')}
                         />
                     </View>
                 </View>
-            );
+            )
         }
-
     }
 }
+ProfileScreen.propTypes = { navigation: PropTypes.object.isRequired }
 
-
-
-export default ProfileScreen;
+export default ProfileScreen

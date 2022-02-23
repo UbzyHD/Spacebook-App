@@ -136,6 +136,11 @@ class ProfileScreen extends Component {
                             onPress={() => this.props.navigation.navigate('Home')}
                         />
                         <Button
+                            title="Friends"
+                            color="red"
+                            onPress={() => this.props.navigation.navigate('Friends')}
+                        />
+                        <Button
                             title="Edit Profile"
                             color="pink"
                             onPress={() => this.props.navigation.navigate('EditProfile')}

@@ -10,8 +10,8 @@ class SignupScreen extends Component {
         super(props)
 
         this.state = {
-            firstName: '',
-            lastName: '',
+            first_name: '',
+            last_name: '',
             email: '',
             password: ''
         }
@@ -64,11 +64,11 @@ class SignupScreen extends Component {
 
                     <Text style={styles.label} >   First Name </Text>
                     <Input style={styles.input} placeholder="Enter your first name..."
-                        onChangeText={(firstName) => this.setState({ firstName })} value={this.state.firstName} />
+                        onChangeText={(first_name) => this.setState({ first_name })} value={this.state.first_name} />
 
                     <Text style={styles.label} >   Last Name </Text>
                     <Input style={styles.input} placeholder="Enter your last name..."
-                        onChangeText={(lastName) => this.setState({ lastName })} value={this.state.lastName} />
+                        onChangeText={(last_name) => this.setState({ last_name })} value={this.state.last_name} />
 
                     <Text style={styles.label} >   Email </Text>
                     <Input style={styles.input} placeholder="Enter your email..."

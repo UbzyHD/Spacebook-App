@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import { View, Text, FlatList, Button } from 'react-native'
+import { StyleSheet } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { Layout, Button, Text, Icon, TopNavigation, TopNavigationAction, Divider, List, ListItem } from '@ui-kitten/components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
-import { baseUrl } from '../../App'
+import baseURL from '../../resources/baseURL'
 
-class Friends extends Component {
+class FriendScreen extends Component {
     constructor (props) {
         super(props)
 
@@ -31,7 +33,7 @@ class Friends extends Component {
     getFriends = async () => {
         const value = await AsyncStorage.getItem('@session_token')
         const userID = await AsyncStorage.getItem('@user_id')
-        return fetch(baseUrl + 'user/' + userID + '/friends', {
+        return fetch(baseURL + 'user/' + userID + '/friends', {
             headers: {
                 'X-Authorization': value
             }
@@ -58,7 +60,7 @@ class Friends extends Component {
 
     getFriendRequests = async () => {
         const value = await AsyncStorage.getItem('@session_token')
-        return fetch(baseUrl + 'friendrequests/', {
+        return fetch(baseURL + 'friendrequests/', {
             headers: {
                 'X-Authorization': value
             }
@@ -86,7 +88,7 @@ class Friends extends Component {
     friendRequestResponse = async (request, userID) => {
         const authToken = await AsyncStorage.getItem('@session_token')
 
-        return fetch(baseUrl + 'friendrequests/' + userID, {
+        return fetch(baseURL + 'friendrequests/' + userID, {
             method: request,
             headers: {
                 'x-authorization': authToken
@@ -105,74 +107,69 @@ class Friends extends Component {
         if (value == null) {
             this.props.navigation.navigate('Login')
         }
-    };
+    }
+
+    BackIcon = (props) => (<Icon {...props} name='arrow-back' />)
+    CheckIcon = (props) => (<Icon {...props} name='checkmark'/>)
+    CrossIcon = (props) => (<Icon {...props} name='close'/>)
+
+    BackAction = () => (<TopNavigationAction icon={this.BackIcon} onPress={() => { this.props.navigation.goBack() }} />)
+    FriendRequestButtons = (userID) => (<>
+        <Button size='small' status='success' style={styles.button} onPress={() => this.friendRequestResponse('POST', userID)}>Accept?</Button>
+        <Button size='small' status='danger' style={styles.button} onPress={() => this.friendRequestResponse('DELETE', userID)}>Deny?</Button></>)
 
     render () {
-        if (this.state.isLoading) {
-            return (
-                <View
-                    style={{
-                        flex: 1,
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}>
-                    <Text>Loading..</Text>
-                </View>
-            )
-        } else {
-            return (
-                <View>
-                    <Text>Friends:</Text>
-                    <FlatList
-                        data={this.state.listFriends}
-                        renderItem={({ item }) => (
-                            <View>
-                                <Text>{item.user_givenname} {item.user_familyname}</Text>
-                            </View>
-                        )}
-                        keyExtractor={(item, index) => item.user_id.toString()}
-                    />
-                    <Text>{'\nFriend Requests:'}</Text>
+        return (
+            <SafeAreaView style={styles.safeAreaView}>
+                <TopNavigation title='Friends' alignment='center' accessoryLeft={this.BackAction} />
+                <Divider />
+                <Layout style={styles.container}>
 
-                    <FlatList
-                        data={this.state.listFriendRequests}
-                        renderItem={({ item }) => (
-                            <View>
-                                <Text>
-                                    {item.first_name} {item.last_name}
-                                    <Button
-                                        title="Accept?"
-                                        color="green"
-                                        onPress={() => this.friendRequestResponse('POST', item.user_id)}
-                                    />
-                                    <Button
-                                        title="Decline?"
-                                        color="red"
-                                        onPress={() => this.friendRequestResponse('DELETE', item.user_id)}
-                                    />
-                                </Text>
-                            </View>
+                    <Layout style={styles.container}>
+                        <Text style={styles.label}>Friends:</Text>
+                        <List data={this.state.listFriends} renderItem={({ item }) => (
+                            <ListItem title={`${item.user_givenname} ${item.user_familyname}`}></ListItem>
                         )}
-                        keyExtractor={(item, index) => item.user_id.toString()}
-                    />
-                    <Text></Text>
-                    <Button
-                        title="Profile"
-                        color="green"
-                        onPress={() => this.props.navigation.navigate('Profile')}
-                    />
-                    <Button
-                        title="Logout"
-                        color="darkblue"
-                        onPress={() => this.props.navigation.navigate('Logout')}
-                    />
-                </View>
-            )
-        }
+                        keyExtractor={(item, index) => item.user_id.toString()}/>
+                    </Layout>
+
+                    <Layout style={styles.container}>
+                        <Text style={styles.label}>Friend Requests:</Text>
+                        <List data={this.state.listFriendRequests} renderItem={({ item }) => (
+                            <ListItem title={`${item.first_name} ${item.last_name}`} accessoryRight={this.FriendRequestButtons(item.user_id)}></ListItem>
+                        )}
+                        keyExtractor={(item, index) => item.user_id.toString()}/>
+                    </Layout>
+                </Layout>
+            </SafeAreaView>
+        )
     }
 }
 
-Friends.propTypes = { navigation: PropTypes.object.isRequired }
+FriendScreen.propTypes = { navigation: PropTypes.object.isRequired }
 
-export default Friends
+const styles = StyleSheet.create({
+    safeAreaView: {
+        flex: 1
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center'
+    },
+    layout: {
+        flex: 1,
+        justifyContent: 'center',
+        padding: 5
+    },
+    label: {
+        justifyContent: 'flex-start'
+    },
+    button: {
+        display: 'flex',
+        margin: 5,
+        minHeight: 30,
+        flexDirection: 'row'
+    }
+})
+
+export { FriendScreen }

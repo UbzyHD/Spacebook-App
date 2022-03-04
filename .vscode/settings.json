@@ -1,5 +1,8 @@
 {
-  "cSpell.words": ["spacebook"],
+  "cSpell.words": [
+    "Signup",
+    "spacebook"
+  ],
     "javascript.format.enable": false,
     "javascript.validate.enable": false,
     "editor.codeActionsOnSave": { "source.fixAll.eslint": true }, 

@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { View, Text, Button, Image } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { Avatar, Icon, Layout, Text, TopNavigation, TopNavigationAction, Button } from '@ui-kitten/components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
-import { baseUrl } from '../../App'
+import baseURL from '../../resources/baseURL'
 
 class ProfileScreen extends Component {
     constructor (props) {
@@ -32,7 +34,7 @@ class ProfileScreen extends Component {
         const value = await AsyncStorage.getItem('@session_token')
         const userid = await AsyncStorage.getItem('@user_id')
 
-        return fetch(baseUrl + 'user/' + userid, {
+        return fetch(baseURL + 'user/' + userid, {
             headers: {
                 'X-Authorization': value
             }
@@ -59,9 +61,9 @@ class ProfileScreen extends Component {
 
     getPhoto = async () => {
         const value = await AsyncStorage.getItem('@session_token')
-        const userid = await AsyncStorage.getItem('@userid')
+        const userid = await AsyncStorage.getItem('@user_id')
 
-        fetch(baseUrl + 'user/' + userid + '/photo', {
+        fetch(baseURL + 'user/' + userid + '/photo', {
             method: 'GET',
             headers: {
                 'X-Authorization': value
@@ -86,7 +88,17 @@ class ProfileScreen extends Component {
         if (value == null) {
             this.props.navigation.navigate('Login')
         }
-    };
+    }
+
+    BackIcon = (props) => (
+        <Icon {...props} name='arrow-back' />
+    )
+
+    navigateBack = () => {
+        this.props.navigation.goBack()
+    }
+
+    BackAction = () => (<TopNavigationAction icon={this.BackIcon} onPress={this.navigateBack} />)
 
     render () {
         if (this.state.isLoading) {
@@ -105,57 +117,53 @@ class ProfileScreen extends Component {
         } else {
             console.log(this.state.userData)
             return (
-                <View>
-                    <View
-                        style={{
-                            flex: 1,
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}>
-                        <Text>My Profile</Text>
-                        <br></br>
-                        <View>
-                            <Image
-                                source={{
-                                    uri: this.state.userPhoto
-                                }}
-                                style={{
-                                    width: 100,
-                                    height: 100,
-                                    borderWidth: 2
-                                }}
-                            />
-                        </View>
+                <SafeAreaView style={styles.safeAreaView}>
+                    <TopNavigation title='Profile' alignment='center' accessoryLeft={this.BackAction} />
+                    <Layout style={styles.layout}>
+                        <Avatar shape='round' style={{ width: 100, height: 100 }} source={{ uri: this.state.userPhoto }}/>
                         <Text>Name: {this.state.userData.first_name} {this.state.userData.last_name}</Text>
                         <Text>Email: {this.state.userData.email}</Text>
                         <Text>Friend Count: {this.state.userData.friend_count}</Text>
-                        <Button
-                            title="Home"
-                            color="darkblue"
-                            onPress={() => this.props.navigation.navigate('Home')}
-                        />
-                        <Button
-                            title="Friends"
-                            color="red"
-                            onPress={() => this.props.navigation.navigate('Friends')}
-                        />
-                        <Button
-                            title="Edit Profile"
-                            color="pink"
-                            onPress={() => this.props.navigation.navigate('EditProfile')}
-                        />
-                        <Button
-                            title="Logout"
-                            color="darkblue"
-                            onPress={() => this.props.navigation.navigate('Logout')}
-                        />
-                    </View>
-                </View>
+                        <Button style={styles.button} onPress={() => this.props.navigation.navigate('EditProfile')}>Edit Profile</Button>
+                    </Layout>
+                </SafeAreaView>
             )
         }
     }
 }
 ProfileScreen.propTypes = { navigation: PropTypes.object.isRequired }
 
-export default ProfileScreen
+const styles = StyleSheet.create({
+    safeAreaView: {
+        flex: 1
+    },
+    layout: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    view: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    label: {
+        justifyContent: 'flex-start'
+    },
+    header: {
+        textAlign: 'center',
+        margin: 10
+    },
+    input: {
+        margin: 2,
+        padding: 5
+    },
+    button: {
+        display: 'flex',
+        margin: 5,
+        minHeight: 30,
+        flexDirection: 'row'
+    }
+})
+
+export { ProfileScreen }

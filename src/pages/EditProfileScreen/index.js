@@ -128,7 +128,7 @@ class EditProfileScreen extends Component {
                         value={this.state.email}
                     />
                     <Input style={styles.input}
-                        placeholder="Enter new password/leave blank to keep current..."
+                        placeholder="Leave blank to keep current..."
                         onChangeText={(password) => this.setState({ password })}
                         value={this.state.password}
                     />

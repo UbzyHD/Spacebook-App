@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Layout, Button, Text, Icon, TopNavigation, TopNavigationAction, Divider, List, ListItem } from '@ui-kitten/components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -24,10 +24,12 @@ class FriendScreen extends Component {
 
         this.getFriends()
         this.getFriendRequests()
+        window.addEventListener('beforeunload', this.unload)
     }
 
     componentWillUnmount () {
         this.unsubscribe()
+        window.removeEventListener('beforeunload', this.unload)
     }
 
     getFriends = async () => {
@@ -119,30 +121,51 @@ class FriendScreen extends Component {
         <Button size='small' status='danger' style={styles.button} onPress={() => this.friendRequestResponse('DELETE', userID)}>Deny?</Button></>)
 
     render () {
-        return (
-            <SafeAreaView style={styles.safeAreaView}>
-                <TopNavigation title='Friends' alignment='center' accessoryLeft={this.BackAction} />
-                <Divider />
-                <Layout style={styles.container}>
-
+        if (this.state.listFriendRequests.length > 0) {
+            return (
+                <SafeAreaView style={styles.safeAreaView}>
+                    <TopNavigation title='Friends' alignment='center' accessoryLeft={this.BackAction} />
+                    <Divider />
                     <Layout style={styles.container}>
-                        <Text style={styles.label}>Friends:</Text>
-                        <List data={this.state.listFriends} renderItem={({ item }) => (
-                            <ListItem title={`${item.user_givenname} ${item.user_familyname}`}></ListItem>
-                        )}
-                        keyExtractor={(item, index) => item.user_id.toString()}/>
-                    </Layout>
 
-                    <Layout style={styles.container}>
-                        <Text style={styles.label}>Friend Requests:</Text>
-                        <List data={this.state.listFriendRequests} renderItem={({ item }) => (
-                            <ListItem title={`${item.first_name} ${item.last_name}`} accessoryRight={this.FriendRequestButtons(item.user_id)}></ListItem>
-                        )}
-                        keyExtractor={(item, index) => item.user_id.toString()}/>
+                        <Layout style={styles.container}>
+                            <Text style={styles.label}>Friends:</Text>
+                            <List data={this.state.listFriends} renderItem={({ item }) => (
+                                <ListItem title={`${item.user_givenname} ${item.user_familyname}`}></ListItem>
+                            )}
+                            keyExtractor={(item, index) => item.user_id.toString()}/>
+                        </Layout>
+
+                        <Layout style={styles.container}>
+                            <Text style={styles.label}>Friend Requests:</Text>
+                            <List data={this.state.listFriendRequests} renderItem={({ item }) => (
+                                <ListItem title={`${item.first_name} ${item.last_name}`} accessoryRight={this.FriendRequestButtons(item.user_id)}></ListItem>
+                            )}
+                            keyExtractor={(item, index) => item.user_id.toString()}/>
+                        </Layout>
                     </Layout>
-                </Layout>
-            </SafeAreaView>
-        )
+                </SafeAreaView>
+            )
+        } else {
+            return (
+                <SafeAreaView style={styles.safeAreaView}>
+                    <TopNavigation title='Friends' alignment='center' accessoryLeft={this.BackAction} />
+                    <Divider />
+                    <Layout style={styles.container}>
+                        <Layout style={styles.container}>
+                            <Text style={styles.label}>Friends:</Text>
+                            <List data={this.state.listFriends} renderItem={({ item }) => (
+                                <ListItem title={`${item.user_givenname} ${item.user_familyname}`}></ListItem>
+                            )}
+                            keyExtractor={(item, index) => item.user_id.toString()}/>
+                        </Layout>
+                        <View style={styles.container}>
+                            <Text style={styles.layout}>No Friend Requests</Text>
+                        </View>
+                    </Layout>
+                </SafeAreaView>
+            )
+        }
     }
 }
 
@@ -162,7 +185,8 @@ const styles = StyleSheet.create({
         padding: 5
     },
     label: {
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
+        padding: 5
     },
     button: {
         display: 'flex',

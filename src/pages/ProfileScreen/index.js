@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Avatar, Icon, Layout, Text, TopNavigation, TopNavigationAction, Button } from '@ui-kitten/components'
+import { Avatar, Icon, Layout, Text, TopNavigation, TopNavigationAction, Button, Spinner } from '@ui-kitten/components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import baseURL from '../../resources/baseURL'
@@ -103,16 +103,11 @@ class ProfileScreen extends Component {
     render () {
         if (this.state.isLoading) {
             return (
-
-                <View
-                    style={{
-                        flex: 1,
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}>
-                    <Text>Loading..</Text>
-                </View>
+                <SafeAreaView style={styles.safeAreaView}>
+                    <Layout style={styles.layout}>
+                        <Spinner/>
+                    </Layout>
+                </SafeAreaView>
             )
         } else {
             console.log(this.state.userData)

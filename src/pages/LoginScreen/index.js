@@ -16,6 +16,21 @@ class LoginScreen extends Component {
         }
     }
 
+    componentDidMount () {
+        this.unsubscribe = this.props.navigation.addListener('focus', () => {
+            this.checkLoggedIn()
+        })
+    }
+
+    checkLoggedIn = async () => {
+        const value = await AsyncStorage.getItem('@session_token')
+        if (value == null) {
+            this.props.navigation.navigate('Login')
+        } else {
+            this.props.navigation.navigate('Home')
+        }
+    }
+
     login = async () => {
         return fetch(baseURL + 'login', {
             method: 'post',

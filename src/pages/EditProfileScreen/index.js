@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import baseURL from '../../resources/baseURL'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Layout, Input, TopNavigation, TopNavigationAction, Icon, Button, Text } from '@ui-kitten/components'
 import PropTypes from 'prop-types'
+import { Layout, Input, TopNavigation, TopNavigationAction, Icon, Button, Text } from '@ui-kitten/components'
+import styles from '../../resources/styles'
 
 class EditProfileScreen extends Component {
     constructor (props) {
@@ -16,8 +16,8 @@ class EditProfileScreen extends Component {
             orig_email: '',
             orig_password: '',
             id: '',
-            firstName: '',
-            lastName: '',
+            first_name: '',
+            last_name: '',
             email: '',
             password: ''
         }
@@ -49,8 +49,8 @@ class EditProfileScreen extends Component {
                 this.setState({
                     isLoading: false,
                     orig_first_name: responseJson.first_name,
-                    orig_last_name: responseJson.last_name,
-                    orig_email: responseJson.email
+                    orig_last_name: responseJson.last_name
+                    // orig_email: responseJson.email
                 })
                 console.log(responseJson.email)
             })
@@ -101,25 +101,25 @@ class EditProfileScreen extends Component {
             })
     }
 
-    BackIcon = (props) => (<Icon {...props} name='arrow-back' />)
-    navigateBack = () => { this.props.navigation.navigate('Home') }
-    BackAction = () => (<TopNavigationAction icon={this.BackIcon} onPress={this.navigateBack} />)
+    BackIcon = (props) => (<Icon {...props} name='arrow-back' />);
+    navigateBack = () => { this.props.navigation.navigate('Home') };
+    BackAction = () => (<TopNavigationAction icon={this.BackIcon} onPress={this.navigateBack} />);
 
     render () {
         console.log(this.state.userData)
         return (
             <SafeAreaView style={styles.safeAreaView}>
                 <TopNavigation title='Edit Profile' alignment='center' accessoryLeft={this.BackAction} />
-                <Layout style={styles.layout}>
+                <Layout style={style.layout}>
                     <Text style={styles.text} category="h1">Edit Profile</Text>
                     <Input style={styles.input}
                         placeholder={this.state.orig_first_name}
-                        onChangeText={(firstName) => this.setState({ firstName })}
+                        onChangeText={(first_name) => this.setState({ first_name })}
                         value={this.state.first_name}
                     />
                     <Input style={styles.input}
                         placeholder={this.state.orig_last_name}
-                        onChangeText={(lastName) => this.setState({ lastName })}
+                        onChangeText={(last_name) => this.setState({ last_name })}
                         value={this.state.last_name}
                     />
                     <Input style={styles.input}
@@ -128,7 +128,7 @@ class EditProfileScreen extends Component {
                         value={this.state.email}
                     />
                     <Input style={styles.input}
-                        placeholder="Leave blank to keep current..."
+                        placeholder="Enter new password/leave blank to keep current..."
                         onChangeText={(password) => this.setState({ password })}
                         value={this.state.password}
                     />
@@ -138,41 +138,6 @@ class EditProfileScreen extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    safeAreaView: {
-        flex: 1
-    },
-    layout: {
-        flex: 1,
-        justifyContent: 'center'
-    },
-    text: {
-        textAlign: 'center'
-    },
-    view: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    label: {
-        justifyContent: 'flex-start'
-    },
-    header: {
-        textAlign: 'center',
-        margin: 10
-    },
-    input: {
-        margin: 2,
-        padding: 5
-    },
-    button: {
-        display: 'flex',
-        margin: 5,
-        minHeight: 30,
-        flexDirection: 'row'
-    }
-})
 
 EditProfileScreen.propTypes = { navigation: PropTypes.object.isRequired }
 

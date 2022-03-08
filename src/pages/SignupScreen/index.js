@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Icon, Layout, Text, TopNavigation, TopNavigationAction, Input, Button } from '@ui-kitten/components'
 import PropTypes from 'prop-types'
 import baseURL from '../../resources/baseURL'
+import styles from '../../resources/styles'
 
 class SignupScreen extends Component {
     constructor (props) {
@@ -60,66 +60,30 @@ class SignupScreen extends Component {
             <SafeAreaView style={styles.safeAreaView}>
                 <TopNavigation title='Signup' alignment='center' accessoryLeft={this.BackAction} />
                 <Layout style={styles.layout}>
-                    <Text style={styles.header} category="h1"> Signup </Text>
+                    <Layout style={styles.layout}>
+                        <Text style={styles.header} category="h1">Signup</Text>
 
-                    <Text style={styles.label} >   First Name </Text>
-                    <Input style={styles.input} placeholder="Enter your first name..."
-                        onChangeText={(first_name) => this.setState({ first_name })} value={this.state.first_name} />
+                        <Text style={styles.label} >First Name</Text>
+                        <Input style={styles.input} placeholder="Enter your first name..." onChangeText={(first_name) => this.setState({ first_name })} value={this.state.first_name} />
 
-                    <Text style={styles.label} >   Last Name </Text>
-                    <Input style={styles.input} placeholder="Enter your last name..."
-                        onChangeText={(last_name) => this.setState({ last_name })} value={this.state.last_name} />
+                        <Text style={styles.label} >Last Name</Text>
+                        <Input style={styles.input} placeholder="Enter your last name..." onChangeText={(last_name) => this.setState({ last_name })} value={this.state.last_name} />
 
-                    <Text style={styles.label} >   Email </Text>
-                    <Input style={styles.input} placeholder="Enter your email..."
-                        onChangeText={(email) => this.setState({ email })} value={this.state.email} />
+                        <Text style={styles.label} >Email</Text>
+                        <Input style={styles.input} placeholder="Enter your email..." onChangeText={(email) => this.setState({ email })} value={this.state.email} />
 
-                    <Text style={styles.label} >   Password </Text>
-                    <Input style={styles.input} placeholder="Enter your password..."
-                        onChangeText={(password) => this.setState({ password })} value={this.state.password} secureTextEntry />
+                        <Text style={styles.label} >Password</Text>
+                        <Input style={styles.input} placeholder="Enter your password..." onChangeText={(password) => this.setState({ password })} value={this.state.password} secureTextEntry />
 
-                    <View style={styles.view}>
-                        <View>
+                        <Layout style={styles.layout_button}>
                             <Button style={styles.button} onPress={() => this.signup()}>Finish Signup</Button>
-                        </View>
-                    </View>
+                        </Layout>
+                    </Layout>
                 </Layout>
             </SafeAreaView>
         )
     }
 }
 SignupScreen.propTypes = { navigation: PropTypes.object.isRequired }
-
-const styles = StyleSheet.create({
-    safeAreaView: {
-        flex: 1
-    },
-    layout: {
-        flex: 1,
-        justifyContent: 'center'
-    },
-    view: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    label: {
-        justifyContent: 'flex-start'
-    },
-    header: {
-        textAlign: 'center',
-        margin: 10
-    },
-    input: {
-        margin: 2,
-        padding: 5
-    },
-    button: {
-        display: 'flex',
-        margin: 5,
-        minHeight: 30,
-        flexDirection: 'row'
-    }
-})
 
 export { SignupScreen }

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Layout, Button, Text, Icon, TopNavigation, TopNavigationAction, Divider, List, ListItem } from '@ui-kitten/components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import baseURL from '../../resources/baseURL'
+import styles from '../../resources/styles'
 
 class FriendScreen extends Component {
     constructor (props) {
@@ -128,7 +128,7 @@ class FriendScreen extends Component {
                     <Divider />
                     <Layout style={styles.container}>
 
-                        <Layout style={styles.container}>
+                        <Layout style={styles.layout}>
                             <Text style={styles.label}>Friends:</Text>
                             <List data={this.state.listFriends} renderItem={({ item }) => (
                                 <ListItem title={`${item.user_givenname} ${item.user_familyname}`}></ListItem>
@@ -136,7 +136,7 @@ class FriendScreen extends Component {
                             keyExtractor={(item, index) => item.user_id.toString()}/>
                         </Layout>
 
-                        <Layout style={styles.container}>
+                        <Layout style={styles.layout}>
                             <Text style={styles.label}>Friend Requests:</Text>
                             <List data={this.state.listFriendRequests} renderItem={({ item }) => (
                                 <ListItem title={`${item.first_name} ${item.last_name}`} accessoryRight={this.FriendRequestButtons(item.user_id)}></ListItem>
@@ -159,9 +159,9 @@ class FriendScreen extends Component {
                             )}
                             keyExtractor={(item, index) => item.user_id.toString()}/>
                         </Layout>
-                        <View style={styles.container}>
+                        <Layout style={styles.layout}>
                             <Text style={styles.layout}>No Friend Requests</Text>
-                        </View>
+                        </Layout>
                     </Layout>
                 </SafeAreaView>
             )
@@ -170,30 +170,5 @@ class FriendScreen extends Component {
 }
 
 FriendScreen.propTypes = { navigation: PropTypes.object.isRequired }
-
-const styles = StyleSheet.create({
-    safeAreaView: {
-        flex: 1
-    },
-    container: {
-        flex: 1,
-        justifyContent: 'center'
-    },
-    layout: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: 5
-    },
-    label: {
-        justifyContent: 'flex-start',
-        padding: 5
-    },
-    button: {
-        display: 'flex',
-        margin: 5,
-        minHeight: 30,
-        flexDirection: 'row'
-    }
-})
 
 export { FriendScreen }

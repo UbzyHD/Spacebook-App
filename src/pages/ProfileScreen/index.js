@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Avatar, Icon, Layout, Text, TopNavigation, TopNavigationAction, Button, Spinner } from '@ui-kitten/components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import baseURL from '../../resources/baseURL'
+import styles from '../../resources/styles'
 
 class ProfileScreen extends Component {
     constructor (props) {
@@ -114,7 +114,7 @@ class ProfileScreen extends Component {
             return (
                 <SafeAreaView style={styles.safeAreaView}>
                     <TopNavigation title='Profile' alignment='center' accessoryLeft={this.BackAction} />
-                    <Layout style={styles.layout}>
+                    <Layout style={styles.container}>
                         <Avatar shape='round' style={{ width: 100, height: 100 }} source={{ uri: this.state.userPhoto }}/>
                         <Text>Name: {this.state.userData.first_name} {this.state.userData.last_name}</Text>
                         <Text>Email: {this.state.userData.email}</Text>
@@ -126,39 +126,7 @@ class ProfileScreen extends Component {
         }
     }
 }
-ProfileScreen.propTypes = { navigation: PropTypes.object.isRequired }
 
-const styles = StyleSheet.create({
-    safeAreaView: {
-        flex: 1
-    },
-    layout: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    view: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    label: {
-        justifyContent: 'flex-start'
-    },
-    header: {
-        textAlign: 'center',
-        margin: 10
-    },
-    input: {
-        margin: 2,
-        padding: 5
-    },
-    button: {
-        display: 'flex',
-        margin: 5,
-        minHeight: 30,
-        flexDirection: 'row'
-    }
-})
+ProfileScreen.propTypes = { navigation: PropTypes.object.isRequired }
 
 export { ProfileScreen }

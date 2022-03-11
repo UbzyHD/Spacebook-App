@@ -27,7 +27,7 @@ class LoginScreen extends Component {
         if (value == null) {
             this.props.navigation.navigate('Login')
         } else {
-            this.props.navigation.navigate('Home')
+            this.login()
         }
     }
 

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
+import { StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Layout, Button, Text, Icon, TopNavigation, TopNavigationAction, Divider, List, ListItem } from '@ui-kitten/components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import baseURL from '../../resources/baseURL'
-import styles from '../../resources/styles'
+// import styles from '../../resources/styles'
 
 class FriendScreen extends Component {
     constructor (props) {
@@ -24,12 +25,10 @@ class FriendScreen extends Component {
 
         this.getFriends()
         this.getFriendRequests()
-        window.addEventListener('beforeunload', this.unload)
     }
 
     componentWillUnmount () {
         this.unsubscribe()
-        window.removeEventListener('beforeunload', this.unload)
     }
 
     getFriends = async () => {
@@ -117,8 +116,8 @@ class FriendScreen extends Component {
 
     BackAction = () => (<TopNavigationAction icon={this.BackIcon} onPress={() => { this.props.navigation.goBack() }} />)
     FriendRequestButtons = (userID) => (<>
-        <Button size='small' status='success' style={styles.button} onPress={() => this.friendRequestResponse('POST', userID)}>Accept?</Button>
-        <Button size='small' status='danger' style={styles.button} onPress={() => this.friendRequestResponse('DELETE', userID)}>Deny?</Button></>)
+        <Button appearance='outline' size='small' status='success' accessoryLeft={(props) => (<Icon {...props} name='person-done'/>)} style={styles.button} onPress={() => this.friendRequestResponse('POST', userID)}>Accept</Button>
+        <Button appearance='outline' size='small' status='danger' accessoryLeft={(props) => (<Icon {...props} name='person-delete'/>)} style={styles.button} onPress={() => this.friendRequestResponse('DELETE', userID)}>Deny</Button></>)
 
     render () {
         if (this.state.listFriendRequests.length > 0) {
@@ -168,6 +167,31 @@ class FriendScreen extends Component {
         }
     }
 }
+
+const styles = StyleSheet.create({
+    safeAreaView: {
+        flex: 1
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center'
+    },
+    layout: {
+        flex: 1,
+        justifyContent: 'center',
+        padding: 5
+    },
+    label: {
+        justifyContent: 'flex-start',
+        padding: 5
+    },
+    button: {
+        display: 'flex',
+        margin: 5,
+        minHeight: 30,
+        flexDirection: 'row'
+    }
+})
 
 FriendScreen.propTypes = { navigation: PropTypes.object.isRequired }
 

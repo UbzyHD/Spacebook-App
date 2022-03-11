@@ -8,6 +8,7 @@ import { HomeScreen } from '../pages/HomeScreen'
 import { ProfileScreen } from '../pages/ProfileScreen'
 import { EditProfileScreen } from '../pages/EditProfileScreen'
 import { FriendScreen } from '../pages/FriendScreen'
+import { AddFriendScreen } from '../pages/AddFriendScreen'
 import { ConfigScreen } from '../pages/ConfigScreen'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
@@ -21,6 +22,7 @@ const MainNavigation = () => (
         <Stack.Screen name='Profile' component={ProfileScreen}/>
         <Stack.Screen name='EditProfile' component={EditProfileScreen}/>
         <Stack.Screen name='Friends' component={FriendScreen}/>
+        <Stack.Screen name='AddFriends' component={AddFriendScreen}/>
         <Stack.Screen name='Configuration' component={ConfigScreen}/>
     </Stack.Navigator>
 )

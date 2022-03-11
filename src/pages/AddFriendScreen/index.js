@@ -14,7 +14,8 @@ class AddFriendScreen extends Component {
             isLoading: true,
             listData: [],
             listAvailableUsers: [],
-            listFriendRequests: []
+            listFriendRequests: [],
+            query: ''
         }
     }
 
@@ -106,14 +107,34 @@ class AddFriendScreen extends Component {
             })
     }
 
-    SearchIcon = (props) => (<Icon {...props} name='search'/>)
-
-      SearchBar = () => (
-          <Input placeholder='Search' accessoryLeft={(props) => (<Icon {...props} name='search'/>)} />
-      );
+    searchUser = async (query) => {
+        const value = await AsyncStorage.getItem('@session_token')
+        return fetch(baseURL + 'search?q=' + query, {
+            headers: {
+                'X-Authorization': value
+            }
+        })
+            .then((response) => {
+                if (response.status === 200) {
+                    return response.json()
+                } else if (response.status === 401) {
+                    this.props.navigation.navigate('Login')
+                } else {
+                    throw Error('Something went wrong')
+                }
+            })
+            .then((responseJson) => {
+                this.setState({
+                    isLoading: false,
+                    listData: responseJson
+                })
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
 
     BackAction = () => (<TopNavigationAction icon={(props) => (<Icon {...props} name='arrow-back' />)} onPress={() => { this.props.navigation.goBack() }} />)
-
     render () {
         const userID = AsyncStorage.getItem('@user_id')
         return (
@@ -121,7 +142,7 @@ class AddFriendScreen extends Component {
                 <TopNavigation title='Add Friends' alignment='center' accessoryLeft={this.BackAction} />
                 <Divider />
                 <Layout style={styles.container}>
-                    <this.SearchBar/>
+                <Input placeholder='Search' onChangeText={(query) => this.setState({query})} value={this.state.query} accessoryLeft={(props) => (<Icon {...props} name='search'/>)} accessoryRight={<><Button style={styles.button} size='small' onPress={() => this.searchUser(this.state.query)}>Search</Button></>}/>
                     <List data={this.state.listData} renderItem={({ item }) => (
                         <ListItem
                             title={`${item.user_givenname} ${item.user_familyname}`}

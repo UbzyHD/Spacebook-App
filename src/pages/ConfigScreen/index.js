@@ -2,7 +2,6 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Avatar, Divider, Icon, Layout, Text, TopNavigation, TopNavigationAction } from '@ui-kitten/components'
-import PropTypes from 'prop-types'
 
 import ToggleThemeButton from '../../components/buttons/ToggleThemeButton'
 
@@ -10,9 +9,9 @@ const BackIcon = (props) => (
     <Icon {...props} name='arrow-back' />
 )
 
-export const ConfigScreen = ({ props }) => {
+export const ConfigScreen = ({ navigation }) => {
     const navigateBack = () => {
-        props.navigation.navigate.goBack()
+        navigation.goBack()
     }
 
     const BackAction = () => (
@@ -20,15 +19,17 @@ export const ConfigScreen = ({ props }) => {
     )
 
     return (
-        <SafeAreaView style={styles.safeAreaView}>
-            <TopNavigation title='Configuration' alignment='center' accessoryLeft={BackAction()} />
-            <Divider />
-            <Layout style={styles.layout}>
-                <Avatar style={styles.avatar} size='large' source={require('../../../assets/icon.png')} />
-                <Text>Click the button to change theme</Text>
-                <ToggleThemeButton />
-            </Layout>
-        </SafeAreaView>
+        <>
+            <SafeAreaView style={styles.safeAreaView}>
+                <TopNavigation title='Configuration' alignment='center' accessoryLeft={BackAction()} />
+                <Divider />
+                <Layout style={styles.layout}>
+                    <Avatar style={styles.avatar} size='large' source={require('../../../assets/icon.png')} />
+                    <Text>Click the button to change theme</Text>
+                    <ToggleThemeButton />
+                </Layout>
+            </SafeAreaView>
+        </>
     )
 }
 
@@ -42,8 +43,3 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 })
-
-ConfigScreen.propTypes = {
-    props: PropTypes.object.isRequired,
-    navigation: PropTypes.object.isRequired
-}

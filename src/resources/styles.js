@@ -11,6 +11,18 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex'
     },
+    card: {
+        flex: 1,
+        margin: 2
+    },
+    topContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    footerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end'
+    },
     layout: {
         flex: 1,
         display: 'flex',

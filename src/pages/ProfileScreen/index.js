@@ -13,7 +13,8 @@ class ProfileScreen extends Component {
         this.state = {
             isLoading: true,
             userData: null,
-            userPhoto: null
+            userPhoto: null,
+            userID: null
         }
     }
 
@@ -51,7 +52,8 @@ class ProfileScreen extends Component {
             .then((responseJson) => {
                 this.setState({
                     isLoading: false,
-                    userData: responseJson
+                    userData: responseJson,
+                    userID: userid
                 })
             })
             .catch((error) => {
@@ -90,13 +92,9 @@ class ProfileScreen extends Component {
         }
     }
 
-    BackIcon = (props) => (
-        <Icon {...props} name='arrow-back' />
-    )
+    BackIcon = (props) => (<Icon {...props} name='arrow-back' />)
 
-    navigateBack = () => {
-        this.props.navigation.goBack()
-    }
+    navigateBack = () => { this.props.navigation.goBack() }
 
     BackAction = () => (<TopNavigationAction icon={this.BackIcon} onPress={this.navigateBack} />)
 
@@ -119,6 +117,7 @@ class ProfileScreen extends Component {
                         <Text>Name: {this.state.userData.first_name} {this.state.userData.last_name}</Text>
                         <Text>Email: {this.state.userData.email}</Text>
                         <Text>Friend Count: {this.state.userData.friend_count}</Text>
+                        <Button style={styles.button} onPress={() => this.props.navigation.navigate('Post', { userID: this.state.userID })}>My Posts</Button>
                         <Button style={styles.button} onPress={() => this.props.navigation.navigate('EditProfile')}>Edit Profile</Button>
                     </Layout>
                 </SafeAreaView>

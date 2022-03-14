@@ -130,8 +130,7 @@ class FriendScreen extends Component {
                         <Layout style={styles.layout}>
                             <Text style={styles.label}>Friends:</Text>
                             <List data={this.state.listFriends} renderItem={({ item }) => (
-                                <ListItem title={`${item.user_givenname} ${item.user_familyname}`}></ListItem>
-                            )}
+                                <ListItem title={`${item.user_givenname} ${item.user_familyname}`} onPress={() => { this.props.navigation.navigate('Post', { userID: item.user_id }) }}></ListItem>)}
                             keyExtractor={(item, index) => item.user_id.toString()}/>
                         </Layout>
 
@@ -154,7 +153,8 @@ class FriendScreen extends Component {
                         <Layout style={styles.container}>
                             <Text style={styles.label}>Friends:</Text>
                             <List data={this.state.listFriends} renderItem={({ item }) => (
-                                <ListItem title={`${item.user_givenname} ${item.user_familyname}`}></ListItem>
+                                <ListItem title={`${item.user_givenname} ${item.user_familyname}`}
+                                    onPress={() => { this.props.navigation.navigate('Post', { userID: item.user_id }) }}></ListItem>
                             )}
                             keyExtractor={(item, index) => item.user_id.toString()}/>
                         </Layout>

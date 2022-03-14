@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Layout, Button, Input, Icon, TopNavigation, TopNavigationAction, Divider, List, ListItem, Card, Text } from '@ui-kitten/components'
+import { Layout, Button, Icon, TopNavigation, TopNavigationAction, Divider, List, Card, Text } from '@ui-kitten/components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import baseURL from '../../resources/baseURL'
+import { NewPost } from '../../components/dialogs/NewPost'
+import styles from '../../resources/styles'
 
 class PostScreen extends Component {
     constructor (props) {
@@ -22,7 +24,7 @@ class PostScreen extends Component {
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
             this.checkLoggedIn()
         })
-        this.getListofPosts(9)
+        this.getListofPosts(this.props.route.params.userID)
     }
 
     componentWillUnmount () {
@@ -63,30 +65,41 @@ class PostScreen extends Component {
             })
     }
 
+    Header = (firstName, lastName, postID) => (
+        <Layout>
+            <Text category='h6'>{firstName}</Text><Text category='s1'>{lastName}</Text>
+        </Layout>
+    );
+
+    Footer = (numberOfLikes, timestamp) => (
+        <Layout style={styles.layout_button}>
+            <Text>Number of Likes: {numberOfLikes}</Text>
+            <Text>Date and Time Posted: {timestamp}</Text>
+        </Layout>
+    );
+
     BackAction = () => (<TopNavigationAction icon={(props) => (<Icon {...props} name='arrow-back' />)} onPress={() => { this.props.navigation.goBack() }} />)
 
     render () {
-        const userID = AsyncStorage.getItem('@user_id')
         return (
             <SafeAreaView style={styles.safeAreaView}>
                 <TopNavigation title='Posts' alignment='center' accessoryLeft={this.BackAction} />
                 <Divider />
-                <Layout style={styles.container}>
+                <Layout style={styles.topContainer}>
                     <List data={this.state.listData} renderItem={({ item }) => (
-                        <>
-                        <Card
-                        header={<Text>{`${item.author.first_name} ${item.author.last_name}`}</Text>}
-                        footer={<><Text>Likes: {item.numLikes}</Text><Text>Time Posted: {item.timestamp}</Text></>}>
-                        <Text>
-                        {item.text}
-                        </Text>
-                      </Card>
-                      <Divider></Divider>
-                      </>
+                        <React.Fragment>
+                            <Card style={styles.card}
+                                header={this.Header(item.author.first_name, item.author.last_name, item.post_id)}
+                                footer={this.Footer(item.numLikes, item.timestamp)}>
+                                <Text>{item.text}</Text>
+                            </Card>
+                            <Divider/>
+                        </React.Fragment>
                     )}
                     keyExtractor={(item, index) => item.post_id.toString()}
                     />
                 </Layout>
+                <NewPost/>
             </SafeAreaView>
         )
     }
@@ -94,9 +107,12 @@ class PostScreen extends Component {
 
 PostScreen.propTypes = { navigation: PropTypes.object.isRequired }
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
     safeAreaView: {
         flex: 1
+    },
+    footerControl: {
+        marginHorizontal: 2
     },
     container: {
         flex: 1,

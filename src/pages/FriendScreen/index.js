@@ -96,7 +96,11 @@ class FriendScreen extends Component {
             }
         })
             .then((response) => {
-                if (response.status === 200) { console.log('Item updated') } else if (response.status === 400) { console.log('Bad request') } else if (response.status === 401) { console.log('Unauthorized') } else if (response.status === 403) { console.log('Forbidden') } else if (response.status === 404) { console.log('Not Found') } else if (response.status === 500) { console.log('Server Error') }
+                if (response.status === 200) {
+                    console.log('Item updated')
+                    this.getFriends()
+                    this.getFriendRequests()
+                } else if (response.status === 400) { console.log('Bad request') } else if (response.status === 401) { console.log('Unauthorized') } else if (response.status === 403) { console.log('Forbidden') } else if (response.status === 404) { console.log('Not Found') } else if (response.status === 500) { console.log('Server Error') }
             })
             .catch((error) => {
                 console.log(error)

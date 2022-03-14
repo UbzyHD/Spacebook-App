@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Layout, Button, Icon, TopNavigation, TopNavigationAction, Divider, List, Card, Text } from '@ui-kitten/components'
+import { Layout, Icon, TopNavigation, TopNavigationAction, Divider, List, Card, Text, Button } from '@ui-kitten/components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import baseURL from '../../resources/baseURL'
@@ -65,16 +64,71 @@ class PostScreen extends Component {
             })
     }
 
+    deletePost = async (userID, postID) => {
+        const authToken = await AsyncStorage.getItem('@session_token')
+        return fetch(baseURL + 'user/' + userID + '/post/' + postID, {
+            method: 'DELETE',
+            headers: {
+                'X-Authorization': authToken
+            }
+        })
+            .then((response) => {
+                if (response.status === 200) {
+                    this.getListofPosts(userID)
+                } else if (response.status === 400) {
+                    throw Error('Failed validation')
+                } else {
+                    throw Error('Something went wrong')
+                }
+            })
+            .then((responseJson) => {
+                console.log('Post deleted with ID: ', responseJson)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    postInteract = async (interactType, userID, postID) => {
+        const authToken = await AsyncStorage.getItem('@session_token')
+        return fetch(baseURL + 'user/' + userID + '/post/' + postID + '/like/', {
+            method: interactType,
+            headers: {
+                'X-Authorization': authToken
+            }
+        })
+            .then((response) => {
+                if (response.status === 200) {
+                    this.getListofPosts(userID)
+                } else if (response.status === 400) {
+                    throw Error('Failed validation')
+                } else {
+                    return response.json()
+                    // throw Error('Something went wrong')
+                }
+            })
+            .then((responseJson) => {
+                console.log('Post liked with ID: ', responseJson)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
     Header = (firstName, lastName, postID) => (
         <Layout>
             <Text category='h6'>{firstName}</Text><Text category='s1'>{lastName}</Text>
         </Layout>
     );
 
-    Footer = (numberOfLikes, timestamp) => (
+    Footer = (numberOfLikes, timestamp, userID, postID) => (
         <Layout style={styles.layout_button}>
             <Text>Number of Likes: {numberOfLikes}</Text>
             <Text>Date and Time Posted: {timestamp}</Text>
+            <Button onPress={() => this.deletePost(userID, postID)}>Delete Post</Button>
+            <Button onPress={() => this.postInteract('POST', userID, postID)}>Like Post</Button>
+            <Button onPress={() => this.postInteract('DELETE', userID, postID)}>Dislike Post</Button>
+            <Button onPress={() => this.props.navigation.navigate('EditPost', { userID: userID, postID: postID })}>Edit Post</Button>
         </Layout>
     );
 
@@ -83,14 +137,14 @@ class PostScreen extends Component {
     render () {
         return (
             <SafeAreaView style={styles.safeAreaView}>
-                <TopNavigation title='Posts' alignment='center' accessoryLeft={this.BackAction} />
+                <TopNavigation title='Posts' alignment='center' accessoryLeft={this.BackAction} accessoryRight={<NewPost/>} />
                 <Divider />
                 <Layout style={styles.topContainer}>
                     <List data={this.state.listData} renderItem={({ item }) => (
                         <React.Fragment>
                             <Card style={styles.card}
                                 header={this.Header(item.author.first_name, item.author.last_name, item.post_id)}
-                                footer={this.Footer(item.numLikes, item.timestamp)}>
+                                footer={this.Footer(item.numLikes, item.timestamp, item.author.user_id, item.post_id)}>
                                 <Text>{item.text}</Text>
                             </Card>
                             <Divider/>
@@ -99,40 +153,11 @@ class PostScreen extends Component {
                     keyExtractor={(item, index) => item.post_id.toString()}
                     />
                 </Layout>
-                <NewPost/>
             </SafeAreaView>
         )
     }
 }
 
 PostScreen.propTypes = { navigation: PropTypes.object.isRequired }
-
-const style = StyleSheet.create({
-    safeAreaView: {
-        flex: 1
-    },
-    footerControl: {
-        marginHorizontal: 2
-    },
-    container: {
-        flex: 1,
-        justifyContent: 'center'
-    },
-    layout: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: 5
-    },
-    label: {
-        justifyContent: 'flex-start',
-        padding: 5
-    },
-    button: {
-        display: 'flex',
-        margin: 5,
-        minHeight: 30,
-        flexDirection: 'row'
-    }
-})
 
 export { PostScreen }

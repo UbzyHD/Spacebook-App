@@ -49,10 +49,12 @@ class EditProfileScreen extends Component {
                 this.setState({
                     isLoading: false,
                     orig_first_name: responseJson.first_name,
-                    orig_last_name: responseJson.last_name
-                    // orig_email: responseJson.email
+                    orig_last_name: responseJson.last_name,
+                    orig_email: responseJson.email,
+                    first_name: responseJson.first_name,
+                    last_name: responseJson.last_name,
+                    email: responseJson.email
                 })
-                console.log(responseJson.email)
             })
             .catch((error) => {
                 console.log(error)
@@ -83,8 +85,6 @@ class EditProfileScreen extends Component {
 
         console.log(JSON.stringify(toSend))
 
-        console.log(authToken)
-
         return fetch(baseURL + 'user/' + userID, {
             method: 'PATCH',
             headers: {
@@ -101,16 +101,11 @@ class EditProfileScreen extends Component {
             })
     }
 
-    BackIcon = (props) => (<Icon {...props} name='arrow-back' />);
-    navigateBack = () => { this.props.navigation.navigate('Home') };
-    BackAction = () => (<TopNavigationAction icon={this.BackIcon} onPress={this.navigateBack} />);
-
     render () {
-        console.log(this.state.userData)
         return (
             <SafeAreaView style={styles.safeAreaView}>
-                <TopNavigation title='Edit Profile' alignment='center' accessoryLeft={this.BackAction} />
-                <Layout style={style.layout}>
+                <TopNavigation title='Edit Profile' alignment='center' accessoryLeft={<TopNavigationAction icon={(props) => (<Icon {...props} name='arrow-back' />)} onPress={() => { this.props.navigation.navigate('Profile') }} />} />
+                <Layout style={styles.layout}>
                     <Text style={styles.text} category="h1">Edit Profile</Text>
                     <Input style={styles.input}
                         placeholder={this.state.orig_first_name}

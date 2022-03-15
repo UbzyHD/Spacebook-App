@@ -17,9 +17,6 @@ export const HomeScreen = (props) => {
                         <Button accessoryLeft={<Icon {...props} name='person' />} style={styles.button} onPress={() => props.navigation.navigate('Profile')}>Profile</Button>
                         <Button accessoryLeft={<Icon {...props} name='people' />} style={styles.button} onPress={() => props.navigation.navigate('Friends')}>Friends</Button>
                     </Layout>
-                    <Layout style={styles.layout_button}>
-                        <Button accessoryLeft={<Icon {...props} name='person-add' />} style={styles.button} onPress={() => props.navigation.navigate('AddFriends')}>Add Friends</Button>
-                    </Layout>
                 </Layout>
             </SafeAreaView>
         </>

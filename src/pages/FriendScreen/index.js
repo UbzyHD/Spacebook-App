@@ -151,7 +151,7 @@ class FriendScreen extends Component {
         } else {
             return (
                 <SafeAreaView style={styles.safeAreaView}>
-                    <TopNavigation title='Friends' alignment='center' accessoryLeft={this.BackAction} />
+                    <TopNavigation title='Friends' alignment='center' accessoryLeft={this.BackAction} accessoryRight={<TopNavigationAction icon={(props) => (<Icon {...props} name='person-add' />)} onPress={() => { this.props.navigation.navigate('AddFriends') }} />}/>
                     <Divider />
                     <Layout style={styles.container}>
                         <Layout style={styles.container}>

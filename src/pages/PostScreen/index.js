@@ -158,6 +158,9 @@ class PostScreen extends Component {
     }
 }
 
-PostScreen.propTypes = { navigation: PropTypes.object.isRequired }
+PostScreen.propTypes = {
+    navigation: PropTypes.object.isRequired,
+    route: PropTypes.object.isRequired
+}
 
 export { PostScreen }

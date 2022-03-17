@@ -142,7 +142,7 @@ class AddFriendScreen extends Component {
                 <TopNavigation title='Add Friends' alignment='center' accessoryLeft={this.BackAction} />
                 <Divider />
                 <Layout style={styles.container}>
-                <Input placeholder='Search' onChangeText={(query) => this.setState({query})} value={this.state.query} accessoryLeft={(props) => (<Icon {...props} name='search'/>)} accessoryRight={<><Button style={styles.button} size='small' onPress={() => this.searchUser(this.state.query)}>Search</Button></>}/>
+                    <Input placeholder='Search' onChangeText={(query) => this.setState({ query })} value={this.state.query} accessoryLeft={(props) => (<Icon {...props} name='search'/>)} accessoryRight={<><Button style={styles.button} size='small' onPress={() => this.searchUser(this.state.query)}>Search</Button></>}/>
                     <List data={this.state.listData} renderItem={({ item }) => (
                         <ListItem
                             title={`${item.user_givenname} ${item.user_familyname}`}

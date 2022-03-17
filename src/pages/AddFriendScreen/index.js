@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Layout, Button, Input, Icon, TopNavigation, TopNavigationAction, Divider, List, ListItem } from '@ui-kitten/components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -136,7 +136,6 @@ class AddFriendScreen extends Component {
 
     BackAction = () => (<TopNavigationAction icon={(props) => (<Icon {...props} name='arrow-back' />)} onPress={() => { this.props.navigation.goBack() }} />)
     render () {
-        const userID = AsyncStorage.getItem('@user_id')
         return (
             <SafeAreaView style={styles.safeAreaView}>
                 <TopNavigation title='Add Friends' alignment='center' accessoryLeft={this.BackAction} />

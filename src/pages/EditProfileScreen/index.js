@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import PropTypes from 'prop-types'
 import { Layout, Input, TopNavigation, TopNavigationAction, Icon, Button, Text } from '@ui-kitten/components'
 import styles from '../../resources/styles'
+import { ImageUpload } from '../../components/dialogs/ImageUpload'
 
 class EditProfileScreen extends Component {
     constructor (props) {
@@ -106,7 +107,7 @@ class EditProfileScreen extends Component {
             <SafeAreaView style={styles.safeAreaView}>
                 <TopNavigation title='Edit Profile' alignment='center' accessoryLeft={<TopNavigationAction icon={(props) => (<Icon {...props} name='arrow-back' />)} onPress={() => { this.props.navigation.navigate('Profile') }} />} />
                 <Layout style={styles.layout}>
-                    <Text style={styles.text} category="h1">Edit Profile</Text>
+                    <Text style={styles.text} category="h1">Edit Profile Info</Text>
                     <Input style={styles.input}
                         placeholder={this.state.orig_first_name}
                         onChangeText={(first_name) => this.setState({ first_name })}
@@ -128,6 +129,9 @@ class EditProfileScreen extends Component {
                         value={this.state.password}
                     />
                     <Button style={styles.button} onPress={() => this.updateItem()}>Update Info</Button>
+                </Layout>
+                <Layout style={styles.container}>
+                    <ImageUpload/>
                 </Layout>
             </SafeAreaView>
         )

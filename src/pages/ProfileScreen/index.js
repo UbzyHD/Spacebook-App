@@ -21,6 +21,8 @@ class ProfileScreen extends Component {
     componentDidMount () {
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
             this.checkLoggedIn()
+            this.getData()
+            this.getPhoto()
         })
 
         this.getData()
@@ -108,12 +110,11 @@ class ProfileScreen extends Component {
                 </SafeAreaView>
             )
         } else {
-            console.log(this.state.userData)
             return (
                 <SafeAreaView style={styles.safeAreaView}>
                     <TopNavigation title='Profile' alignment='center' accessoryLeft={this.BackAction} />
                     <Layout style={styles.container}>
-                        <Avatar shape='round' style={{ width: 100, height: 100 }} source={{ uri: this.state.userPhoto }}/>
+                        <Avatar shape='round' style={{ width: 256, height: 256 }} source={{ uri: this.state.userPhoto }}/>
                         <Text>Name: {this.state.userData.first_name} {this.state.userData.last_name}</Text>
                         <Text>Email: {this.state.userData.email}</Text>
                         <Text>Friend Count: {this.state.userData.friend_count}</Text>

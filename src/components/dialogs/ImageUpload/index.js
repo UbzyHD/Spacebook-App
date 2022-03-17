@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useFilePicker } from 'use-file-picker'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Avatar, Button, Layout, Spinner, Text } from '@ui-kitten/components'
@@ -14,8 +14,6 @@ export const ImageUpload = () => {
         limitFilesConfig: { max: 1 },
         maxFileSize: 50
     })
-
-    const [hidden, setHidden] = useState(true)
 
     const sendToServer = async (data) => {
         const authToken = await AsyncStorage.getItem('@session_token')

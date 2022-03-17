@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, Card, Layout, Modal, Text, Icon, Input } from '@ui-kitten/components'
+import { StyleSheet } from 'react-native'
+import { Button, Card, Layout, Modal, Text, Icon, Input, TopNavigationAction } from '@ui-kitten/components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import baseURL from '../../../resources/baseURL'
 
@@ -8,7 +9,7 @@ export const NewPost = () => {
     const [postText, setpostText] = React.useState()
 
     const SubmitPost = async (userID, text) => {
-        const authToken = AsyncStorage.getItem('@session_token')
+        const authToken = await AsyncStorage.getItem('@session_token')
         return fetch(baseURL + 'user/' + userID + '/post/', {
             method: 'post',
             headers: {
@@ -34,20 +35,37 @@ export const NewPost = () => {
             })
     }
 
+    const style = StyleSheet.create({
+        container: {
+            flex: 1
+        },
+        backdrop: {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)'
+        },
+        layout_button: {
+            flex: 1,
+            display: 'flex-end',
+            justifyContent: 'center'
+        }
+    })
+
     return (
         <Layout level='1'>
 
-            <Button onPress={() => setVisible(true)}>New Post</Button>
+            <TopNavigationAction icon={(props) => (<Icon {...props} name='edit' />)} onPress={() => setVisible(true)} />
 
-            <Modal visible={visible}>
+            <Modal visible={visible} backdropStyle={style.backdrop}>
                 <Card disabled={true}>
-                    <Text>New Post</Text>
-                    <Input placeholder='Enter new post text' multiline={true} onChange={e => setpostText(e.target.value)} accessoryLeft={(props) => (<Icon {...props} name='edit'/>)}/>
-                    <Button onPress={() => SubmitPost(8, { text: postText }, setVisible(false))}>Submit Post</Button>
-                    <Button onPress={() => setVisible(false)}>Cancel New Post</Button>
+                    <Layout style={style.container}>
+                        <Text>New Post</Text>
+                        <Input placeholder='Enter new post text' multiline={true} onChange={e => setpostText(e.target.value)} accessoryLeft={(props) => (<Icon {...props} name='edit'/>)}/>
+                        <Layout style={style.layout_button}>
+                            <Button onPress={() => setVisible(false)}>Cancel New Post</Button>
+                            <Button onPress={() => SubmitPost(8, { text: postText }, setVisible(false))}>Submit Post</Button>
+                        </Layout>
+                    </Layout>
                 </Card>
             </Modal>
-
         </Layout>
     )
 }

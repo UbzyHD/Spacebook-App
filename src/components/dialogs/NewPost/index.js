@@ -8,8 +8,9 @@ export const NewPost = () => {
     const [visible, setVisible] = React.useState(false)
     const [postText, setpostText] = React.useState()
 
-    const SubmitPost = async (userID, text) => {
+    const SubmitPost = async (text) => {
         const authToken = await AsyncStorage.getItem('@session_token')
+        const userID = await AsyncStorage.getItem('@user_id')
         return fetch(baseURL + 'user/' + userID + '/post/', {
             method: 'post',
             headers: {
@@ -61,7 +62,7 @@ export const NewPost = () => {
                         <Input placeholder='Enter new post text' multiline={true} onChange={e => setpostText(e.target.value)} accessoryLeft={(props) => (<Icon {...props} name='edit'/>)}/>
                         <Layout style={style.layout_button}>
                             <Button onPress={() => setVisible(false)}>Cancel New Post</Button>
-                            <Button onPress={() => SubmitPost(8, { text: postText }, setVisible(false))}>Submit Post</Button>
+                            <Button onPress={() => SubmitPost({ text: postText }, setVisible(false))}>Submit Post</Button>
                         </Layout>
                     </Layout>
                 </Card>

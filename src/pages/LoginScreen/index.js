@@ -57,7 +57,7 @@ class LoginScreen extends Component {
                         return response.json()
                     } else if (response.status === 400) {
                         this.setState({
-                            errorMessage: 'Invalid email/password combination',
+                            errorMessage: 'Invalid email/password combination\nTry again.',
                             visible: true
                         })
                         throw Error('Invalid email/password')

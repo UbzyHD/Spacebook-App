@@ -31,6 +31,9 @@ const styles = StyleSheet.create({
     text: {
         textAlign: 'center'
     },
+    backdrop: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    },
     view: {
         flexDirection: 'row',
         justifyContent: 'center',

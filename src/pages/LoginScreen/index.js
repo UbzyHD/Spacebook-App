@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Layout, Text, Input, Button } from '@ui-kitten/components'
+import { Layout, Text, Input, Button, Tooltip } from '@ui-kitten/components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import baseURL from '../../resources/baseURL'
@@ -12,7 +12,9 @@ class LoginScreen extends Component {
 
         this.state = {
             email: 'uabidul@mmu.ac.uk',
-            password: 'uabidul'
+            password: 'uabidul',
+            visible: false,
+            errorMessage: 'Invalid'
         }
     }
 
@@ -27,37 +29,57 @@ class LoginScreen extends Component {
         if (value == null) {
             this.props.navigation.navigate('Login')
         } else {
-            this.login()
+            this.login({ email: this.state.email, password: this.state.password })
         }
     }
 
-    login = async () => {
-        return fetch(baseURL + 'login', {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state)
-        })
-            .then((response) => {
-                if (response.status === 200) {
-                    return response.json()
-                } else if (response.status === 400) {
-                    throw Error('Invalid email or password')
-                } else {
-                    throw Error('Something went wrong')
-                }
+    login = async (params) => {
+        if (!this.state.email) {
+            this.setState({
+                errorMessage: 'Empty email. Cannot login',
+                visible: true
             })
-            .then(async (responseJson) => {
-                console.log(responseJson)
-                await AsyncStorage.setItem('@session_token', responseJson.token.toString())
-                await AsyncStorage.setItem('@user_id', responseJson.id.toString())
-                this.props.navigation.replace('Home')
+        } else if (!this.state.password) {
+            this.setState({
+                errorMessage: 'Empty password. Cannot login',
+                visible: true
             })
-            .catch((error) => {
-                console.log(error)
+        } else {
+            return fetch(baseURL + 'login', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(params)
             })
+                .then((response) => {
+                    if (response.status === 200) {
+                        return response.json()
+                    } else if (response.status === 400) {
+                        this.setState({
+                            errorMessage: 'Invalid email/password combination',
+                            visible: true
+                        })
+                        throw Error('Invalid email/password')
+                    } else {
+                        throw Error('Something went wrong')
+                    }
+                })
+                .then(async (responseJson) => {
+                    console.log(responseJson)
+                    await AsyncStorage.setItem('@session_token', responseJson.token.toString())
+                    await AsyncStorage.setItem('@user_id', responseJson.id.toString())
+                    this.props.navigation.replace('Home')
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
     }
+
+    renderLoginButton = () => (
+        <Button onPress={() => this.login({ email: this.state.email, password: this.state.password })}>Login</Button>
+    );
 
     render () {
         return (
@@ -70,7 +92,12 @@ class LoginScreen extends Component {
                     <Input style={styles.input} placeholder="Enter your password..." onChangeText={(password) => this.setState({ password })} value={this.state.password} secureTextEntry />
                     <Layout style={styles.layout_button}>
                         <Button style={styles.button} onPress={() => this.props.navigation.navigate('Signup')}>Signup</Button>
-                        <Button style={styles.button} onPress={() => this.login()}>Login</Button>
+                        <Tooltip
+                            anchor={this.renderLoginButton}
+                            visible={this.state.visible}
+                            onBackdropPress={() => this.setState(({ visible }) => ({ visible: !visible }))}>
+                            {this.state.errorMessage}
+                        </Tooltip>
                     </Layout>
                 </Layout>
             </SafeAreaView>

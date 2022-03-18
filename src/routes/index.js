@@ -7,6 +7,7 @@ import { SignupScreen } from '../pages/SignupScreen'
 import { HomeScreen } from '../pages/HomeScreen'
 import { ProfileScreen } from '../pages/ProfileScreen'
 import { PostScreen } from '../pages/PostScreen'
+import { PostEditScreen } from '../pages/PostEditScreen'
 import { EditProfileScreen } from '../pages/EditProfileScreen'
 import { FriendScreen } from '../pages/FriendScreen'
 import { AddFriendScreen } from '../pages/AddFriendScreen'
@@ -22,6 +23,7 @@ const MainNavigation = () => (
         <Stack.Screen name='Home' component={HomeScreen} />
         <Stack.Screen name='Profile' component={ProfileScreen}/>
         <Stack.Screen name='Post' component={PostScreen}/>
+        <Stack.Screen name='EditPost' component={PostEditScreen}/>
         <Stack.Screen name='EditProfile' component={EditProfileScreen}/>
         <Stack.Screen name='Friends' component={FriendScreen}/>
         <Stack.Screen name='AddFriends' component={AddFriendScreen}/>

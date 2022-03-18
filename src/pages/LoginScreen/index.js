@@ -14,7 +14,7 @@ class LoginScreen extends Component {
             email: 'uabidul@mmu.ac.uk',
             password: 'uabidul',
             visible: false,
-            errorMessage: 'Invalid'
+            errorMessage: ''
         }
     }
 

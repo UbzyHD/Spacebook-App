@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Layout, Icon, TopNavigation, TopNavigationAction, Divider, Button, Input } from '@ui-kitten/components'
+import { Layout, Icon, TopNavigation, TopNavigationAction, Divider, Button, Input, Tooltip } from '@ui-kitten/components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import baseURL from '../../resources/baseURL'
@@ -15,7 +15,9 @@ class PostEditScreen extends Component {
             listData: [],
             listAvailableUsers: [],
             listFriendRequests: [],
-            newText: ''
+            newText: '',
+            visible: false,
+            errorMessage: ''
         }
     }
 
@@ -68,40 +70,56 @@ class PostEditScreen extends Component {
         const value = await AsyncStorage.getItem('@session_token')
         const userid = await AsyncStorage.getItem('@user_id')
 
-        return fetch(baseURL + 'user/' + userid + '/post/' + postID, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Authorization': value
-            },
-            body: JSON.stringify(text)
+        if (!this.state.newText) {
+            this.setState({
+                errorMessage: 'Post text cannot be empty. Enter some text',
+                visible: true
+            })
+        } else {
+            return fetch(baseURL + 'user/' + userid + '/post/' + postID, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization': value
+                },
+                body: JSON.stringify(text)
 
-        })
-            .then((response) => {
-                if (response.status === 200) {
-                    this.props.navigation.navigate('Post', { userID: this.state.userID })
-                } else if (response.status === 401) {
-                    this.props.navigation.navigate('Login')
-                } else {
-                    throw Error('Something went wrong')
-                }
             })
-            .then((responseJson) => {
-                console.log('Post updated with ID: ', responseJson)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+                .then((response) => {
+                    if (response.status === 200) {
+                        this.props.navigation.navigate('Profile')
+                    } else if (response.status === 401) {
+                        this.props.navigation.navigate('Login')
+                    } else {
+                        throw Error('Something went wrong')
+                    }
+                })
+                .then((responseJson) => {
+                    console.log('Post updated with ID: ', responseJson)
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
     }
 
+    renderSubmitButton = () => (
+        <Button onPress={() => this.updatePost(this.state.listData.post_id, { text: this.state.newText })}>Submit</Button>
+    );
+
     render () {
-        console.log(this.state.listData)
         return (
             <SafeAreaView style={styles.safeAreaView}>
                 <TopNavigation title='Edit Post' alignment='center' accessoryLeft={<TopNavigationAction icon={(props) => (<Icon {...props} name='arrow-back' />)} onPress={() => { this.props.navigation.goBack() }} />} />
                 <Divider />
                 <Layout style={styles.container}>
-                    <Input multiline={true} placeholder='Enter updated text' onChangeText={(newText) => this.setState({ newText })} value={this.state.newText} accessoryLeft={(props) => (<Icon {...props} name='edit'/>)} accessoryRight={<><Button size='small' onPress={() => this.updatePost(this.state.listData.post_id, { text: this.state.newText })}>Submit</Button></>}/>
+                    <Input multiline={true} placeholder='Enter updated text' onChangeText={(newText) => this.setState({ newText })} value={this.state.newText} accessoryLeft={(props) => (<Icon {...props} name='edit'/>)}/>
+                    <Tooltip
+                        anchor={this.renderSubmitButton}
+                        visible={this.state.visible}
+                        onBackdropPress={() => this.setState(({ visible }) => ({ visible: !visible }))}>
+                        {this.state.errorMessage}
+                    </Tooltip>
                 </Layout>
             </SafeAreaView>
         )
